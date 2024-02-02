@@ -1,0 +1,55 @@
+﻿@page "/customer"
+@inject HttpClient Http
+
+<h3>Customer</h3>
+
+
+@if (customer == null)
+{
+  <p><em>Loading...</em></p>
+}
+else
+{
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Birtdate</th>
+        <th>Meja</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var cust in customer)
+      {
+        <tr>
+          <td>@cust.Id</td>
+          <td>@cust.Name</td>
+          <td>@cust.BirthDate</td>
+          <td>@cust.Meja</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
+
+@code {
+  private Customer[]? customer;
+
+  //public HttpClient httpClient = new HttpClient();
+
+  protected override async Task OnInitializedAsync()
+  {
+    customer = await Http.GetFromJsonAsync<Customer[]>("http://localhost:5296/customer");
+    //customer = await httpClient.GetFromJsonAsync<Customer[]>("http://localhost:5296/customer");
+  }
+
+  public class Customer
+  {
+    public int Id { get; set; }
+    public required string Name { get; set; }
+    public DateTime BirthDate { get; set; }
+    public required string Meja { get; set; }
+  }
+
+}
